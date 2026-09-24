@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小作坊财税合规管家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans">
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="flex gap-2 mb-8 overflow-x-auto pb-2">
+            <button onclick="showPage(0)" class="tab-btn bg-green-600 text-white px-4 py-2 rounded">首页&财税体检</button>
+            <button onclick="showPage(1)" class="tab-btn bg-gray-200 px-4 py-2 rounded">注册沙盘流程</button>
+            <button onclick="showPage(2)" class="tab-btn bg-gray-200 px-4 py-2 rounded">合规成本&补贴测算</button>
+            <button onclick="showPage(3)" class="tab-btn bg-gray-200 px-4 py-2 rounded">简易流水记账</button>
+        </div>
+
+        <div id="page0" class="page">
+            <div class="bg-green-700 text-white p-8 rounded-xl text-center mb-8">
+                <h1 class="text-3xl font-bold mb-3">小作坊财税合规管家</h1>
+                <p class="text-lg mb-6">让您经营更安心</p >
+                <button onclick="openCheck()" class="bg-white text-green-700 font-bold px-8 py-3 rounded-lg text-lg">一键财税体检</button>
+            </div>
+            <div id="checkForm" class="hidden bg-white p-6 rounded-xl shadow mb-6">
+                <h3 class="text-xl font-bold mb-4">财税体检问卷</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-1">所属行业</label>
+                        <select id="industry" class="w-full border p-2 rounded">
+                            <option value="陶瓷">陶瓷</option>
+                            <option value="食品">食品</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">月均营收区间</label>
+                        <select id="income" class="w-full border p-2 rounded">
+                            <option value="3万以下">3万以下</option>
+                            <option value="3‑8万">3‑8万</option>
+                            <option value="8万以上">8万以上</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">当前是否有营业执照</label>
+                        <select id="hasLicense" class="w-full border p-2 rounded">
+                            <option value="yes">已有证</option>
+                            <option value="no">暂无证</option>
+                        </select>
+                    </div>
+                    <button onclick="runCheck()" class="bg-green-600 text-white px-6 py-2 rounded">开始检测</button>
+                </div>
+            </div>
+            <div id="checkResult" class="hidden bg-white p-6 rounded-xl shadow border-l-4 border-green-500">
+                <h3 class="text-xl font-bold mb-2">📋 财税体检报告</h3>
+                <p id="resultText" class="text-gray-700"></p >
+            </div>
+        </div>
+
+        <div id="page1" class="page hidden">
+            <h2 class="text-2xl font-bold mb-6">个体户注册全流程沙盘</h2>
+            <div class="space-y-4">
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">1.核名</div>
+                    <div class="w-1/3 text-green-600">官方自办：免费</div>
+                    <div class="w-1/3 text-red-500">中介代理：100‑300元</div>
+                </div>
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">2.提交资料</div>
+                    <div class="w-1/3 text-green-600">官方自办：免费</div>
+                    <div class="w-1/3 text-red-500">中介代理：200‑400元</div>
+                </div>
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">3.领取执照</div>
+                    <div class="w-1/3 text-green-600">官方自办：免费</div>
+                    <div class="w-1/3 text-red-500">中介代理：100元</div>
+                </div>
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">4.刻章</div>
+                    <div class="w-1/3 text-green-600">官方自办：部分地区免费</div>
+                    <div class="w-1/3 text-red-500">中介代理：200‑500元</div>
+                </div>
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">5.银行开户</div>
+                    <div class="w-1/3 text-green-600">官方自办：0‑100元</div>
+                    <div class="w-1/3 text-red-500">中介代理：300‑800元</div>
+                </div>
+                <div class="flex border rounded-lg p-4 mb-3 bg-white shadow">
+                    <div class="w-1/3 font-bold">6.税务登记</div>
+                    <div class="w-1/3 text-green-600">官方自办：免费</div>
+                    <div class="w-1/3 text-red-500">中介代理：200‑600元</div>
+                </div>
+                <button onclick="downloadList()" class="bg-green-600 text-white px-6 py-3 rounded-lg mt-4">一键下载所需材料清单</button>
+            </div>
+        </div>
+
+        <div id="page2" class="page hidden">
+            <h2 class="text-2xl font-bold mb-6">合规成本&补贴测算器</h2>
+            <div class="bg-white p-6 rounded-xl shadow mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1">员工人数</label>
+                        <input type="number" id="staffNum" value="2" class="w-full border p-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">预计月流水(元)</label>
+                        <input type="number" id="monthIncome" value="50000" class="w-full border p-2 rounded">
+                    </div>
+                </div>
+                <button onclick="calcCost()" class="mt-4 bg-green-600 text-white px-6 py-2 rounded">开始测算</button>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow">
+                <canvas id="costChart" height="220"></canvas>
+                <div id="calcResult" class="mt-4 text-lg"></div>
+            </div>
+        </div>
+
+        <div id="page3" class="page hidden">
+            <h2 class="text-2xl font-bold mb-6">简易流水账（老板版记账）</h2>
+            <div class="bg-white p-6 rounded-xl shadow mb-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block mb-1">收支类型</label>
+                        <select id="ioType" class="w-full border p-2 rounded">
+                            <option value="in">收入（卖货）</option>
+                            <option value="out">支出（买原料）</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-1">金额(元)</label>
+                        <input type="number" id="money" class="w-full border p-2 rounded">
+                    </div>
+                    <div>
+                        <label class="block mb-1">备注</label>
+                        <input type="text" id="note" class="w-full border p-2 rounded" placeholder="例如：原料采购、货品销售">
+                    </div>
+                    <button onclick="addRecord()" class="bg-green-600 text-white px-6 py-2 rounded">录入流水（支持语音/拍照录入模拟）</button>
+                </div>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow">
+                <h3 class="font-bold mb-3">📢系统风险预警</h3>
+                <div id="warnBox" class="p-3 bg-yellow-50 border border-yellow-200 rounded mb-4">等待录入流水后生成预警提示</div>
+                <h4 class="font-bold mb-2">流水记录</h4>
+                <div id="recordList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+<script>
+function showPage(idx){
+    document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));
+    document.querySelectorAll('.tab-btn').forEach(b=>{
+        b.classList.remove('bg-green-600','text-white');
+        b.classList.add('bg-gray-200');
+    })
+    document.getElementById(`page${idx}`).classList.remove('hidden');
+    document.querySelectorAll('.tab-btn')[idx].classList.add('bg-green-600','text-white');
+    document.querySelectorAll('.tab-btn')[idx].classList.remove('bg-gray-200');
+}
+
+function openCheck(){
+    document.getElementById('checkForm').classList.remove('hidden');
+    document.getElementById('checkResult').classList.add('hidden');
+}
+function runCheck(){
+    const ind = document.getElementById('industry').value;
+    const inc = document.getElementById('income').value;
+    const hasLic = document.getElementById('hasLicense').value;
+    let tip = "";
+    if(inc === "3‑8万"){
+        tip = "检测到您为个体户，月营收5万。建议您关注「查账征收」风险。当前您符合申领「创业补贴」资格，预计可领10000元。";
+    }else if(inc === "8万以上"){
+        tip = "检测到您月营收较高，建议规范建账，警惕税务稽查风险；可申领创业补贴，预计可领15000元。";
+    }else{
+        tip = "您月营收较低，享受小规模免税政策，建议完成工商登记，可申领创业补贴，预计可领8000元。";
+    }
+    document.getElementById('resultText').innerText = tip;
+    document.getElementById('checkResult').classList.remove('hidden');
+}
+
+function downloadList(){
+    alert("模拟下载材料清单：个体户注册材料清单.pdf（实际项目对接后端即可实现真实下载）");
+}
+
+let chart = null;
+function calcCost(){
+    const staff = Number(document.getElementById('staffNum').value);
+    const monthIncome = Number(document.getElementById('monthIncome').value);
+    const daiZhang = 300;
+    const socialSec = staff * 600;
+    const subsidy = 1200;
+    const realCost = daiZhang + socialSec - subsidy;
+
+    const ctx = document.getElementById('costChart').getContext('2d');
+    if(chart) chart.destroy();
+    chart = new Chart(ctx, {
+        type:'bar',
+        data:{
+            labels:['代账费','员工社保','政府补贴抵扣'],
+            datasets:[{
+                label:'月度金额(元)',
+                data:[daiZhang,socialSec, -subsidy],
+                backgroundColor:['#ef4444','#f59e0b','#10b981']
+            }]
+        }
+    })
+    document.getElementById('calcResult').innerText = 
+        `✅抵扣后，您每月实际合规成本仅${realCost}元。
+        ⚠️风险提示：不做合规会存在税务稽查补税风险，无法开具专票丢失大客户。
+        📈预估可获得银行经营贷款额度：${Math.floor(monthIncome*0.6)}元`;
+}
+
+let records = [];
+
+// 从后端加载所有流水记录
+async function loadRecords(){
+    try {
+        const res = await fetch('/api/records');
+        records = await res.json();
+        renderRecord();
+        updateWarn();
+    } catch(e) {
+        console.error('加载流水失败:', e);
+    }
+}
+
+// 保存一条流水到后端 JSON 文件
+async function addRecord(){
+    const type = document.getElementById('ioType').value;
+    const money = Number(document.getElementById('money').value);
+    const note = document.getElementById('note').value;
+
+    if(!money || money <= 0){
+        alert('请输入有效的金额');
+        return;
+    }
+
+    const record = {type, money, note, time: new Date().toLocaleString()};
+
+    try {
+        const res = await fetch('/api/records', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(record)
+        });
+        const result = await res.json();
+        if(result.success){
+            // 保存成功后重新加载
+            await loadRecords();
+            // 清空输入
+            document.getElementById('money').value = '';
+            document.getElementById('note').value = '';
+        }
+    } catch(e) {
+        alert('保存失败: ' + e.message);
+    }
+}
+
+// 更新风险预警
+function updateWarn(){
+    let warnText = "";
+    const totalIn = records.filter(r=>r.type==="in").reduce((s,i)=>s+i.money,0);
+    if(totalIn > 30000){
+        warnText = "⚠️您本季度营业收入已接近免税额度上限，注意开票管控；进项票不足，建议维持小规模纳税人，不要升级一般纳税人。"
+    }else if(records.length === 0){
+        warnText = "等待录入流水后生成预警提示";
+    }else{
+        warnText = "✅您本季度营业收入未超免税额度，无需缴税。"
+    }
+    document.getElementById('warnBox').innerText = warnText;
+}
+
+function renderRecord(){
+    const dom = document.getElementById('recordList');
+    dom.innerHTML = "";
+    if(records.length === 0){
+        dom.innerHTML = '<div class="text-gray-400 text-center py-4">暂无流水记录</div>';
+        return;
+    }
+    records.forEach((r, idx)=>{
+        const color = r.type==="in"?"text-green-600":"text-red-600";
+        dom.innerHTML += `<div class="border p-2 rounded flex justify-between items-start">
+            <div class="flex-1">
+                <span class="${color}">${r.type==="in"?"收入":"支出"}：${r.money}元</span>
+                <span class="text-gray-500 ml-2">${r.note}</span>
+                <div class="text-xs text-gray-400">${r.time}</div>
+            </div>
+            <button onclick="deleteRecord(${idx})" class="text-red-500 hover:text-red-700 text-sm px-2 py-1 border border-red-200 rounded hover:bg-red-50">删除</button>
+        </div>`
+    })
+}
+
+// 删除一条流水
+async function deleteRecord(index){
+    if(!confirm('确定要删除这条流水记录吗？')) return;
+    try {
+        const res = await fetch(`/api/records/${index}`, { method: 'DELETE' });
+        const result = await res.json();
+        if(result.success){
+            await loadRecords();
+        } else {
+            alert('删除失败: ' + (result.error || '未知错误'));
+        }
+    } catch(e) {
+        alert('删除失败: ' + e.message);
+    }
+}
+
+// 页面加载完成后自动加载流水
+window.addEventListener('DOMContentLoaded', loadRecords);
+</script>
+</body>
+</html>
